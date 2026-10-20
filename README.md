@@ -19,7 +19,7 @@ O Decap CMS usa o GitHub para gravar as alterações. Como o site é estático, 
 3. Implante o provedor no Cloudflare seguindo as instruções dele. Guarde o **Client ID** e o **Client Secret** em variáveis secretas do Worker/Cloudflare. Nunca coloque o Client Secret em `index.html`, `config.yml`, `content/site.json` ou em uma mensagem pública.
 4. Depois da implantação, copie o endereço base do Worker, por exemplo `https://teu7vd-cms-auth.seu-usuario.workers.dev`.
 5. Em `admin/config.yml`, substitua somente `https://CONFIGURAR-WORKER-OAUTH.workers.dev` pelo endereço base real. Grave e publique essa alteração no repositório.
-6. No GitHub, proteja a branch `main` em **Settings → Rules → Rulesets** (ou **Settings → Branches**, conforme a interface disponível). Exija pull request e pelo menos uma aprovação antes de integrar alterações. Isso faz com que o painel sirva para propor publicações sem permitir que editores publiquem diretamente sem revisão.
+6. No GitHub, proteja a branch `main` em **Settings → Rules → Rulesets** (ou **Settings → Branches**, conforme a interface disponível). Exija pull request, mas não exija aprovação de outra conta quando houver apenas uma pessoa responsável pelo repositório; assim, essa pessoa poderá revisar e integrar as alterações.
 7. Em **Settings → Collaborators** (ou nas configurações de acesso da organização), conceda permissão **Write** às contas autorizadas a usar o painel. Não conceda acesso administrativo completo ao repositório se a pessoa só precisa cadastrar conteúdo.
 8. Abra o endereço `/admin/`, entre com uma conta autorizada e confirme que as coleções **FLYERS e atividades**, **Giras, cursos, aulas e eventos**, **Fotos e vídeos de eventos** e **Aulas de desenvolvimento mediúnico** aparecem.
 
