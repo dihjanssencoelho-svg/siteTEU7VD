@@ -15,11 +15,11 @@ collections:
     label: Conteúdo do site
     files:
       - name: conteudo
-        label: Agenda, FLYERS e registros
+        label: Agenda, flyers e registros
         file: content/site.json
         format: json
         fields:
-          - label: FLYERS e atividades
+          - label: Flyers e atividades
             name: flyers
             widget: list
             summary: "{{fields.title}}"
@@ -91,3 +91,4 @@ collections:
               - { label: Horário de sábado, name: saturdayTime, widget: string }
               - { label: Situação da turma de quarta/quinta, name: weekdayStatus, widget: string }
               - { label: Situação da turma de sábado, name: saturdayStatus, widget: string }
+
