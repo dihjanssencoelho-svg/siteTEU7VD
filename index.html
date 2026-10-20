@@ -108,6 +108,7 @@
         const calendarCells=Array.from({length:cells},(_,i)=>{
           const day=i-first+1;
           if(day<1||day>days)return '<div class="calendar-day empty" aria-hidden="true"></div>';
+          const key=year+'-'+String(monthIndex+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
           const eventDate=new Date(year,monthIndex,day);
           const events=getAgendaEventsForDate(year,monthIndex,day,today);
           if(!events.length)return '<div class="calendar-day"><span class="calendar-date">'+day+'</span></div>';
@@ -122,12 +123,13 @@
         container.querySelectorAll('[data-agenda-date]').forEach(button=>button.addEventListener('click',()=>{
           container.querySelectorAll('[data-agenda-date]').forEach(day=>day.setAttribute('aria-pressed','false'));
           button.setAttribute('aria-pressed','true');
-          const events=agendaEvents[button.dataset.agendaDate];
+          const [eventYear,eventMonth,eventDay]=button.dataset.agendaDate.split('-').map(Number);
+          const today=new Date();today.setHours(0,0,0,0);
+          const events=getAgendaEventsForDate(eventYear,eventMonth-1,eventDay,today);
           if(events.some(event=>event.kind==='gira'&&!event.closed)){
             window.open('https://tu7vd.my.canva.site/reservadesenhas','_blank','noopener,noreferrer');
             return;
           }
-          const [eventYear,eventMonth,eventDay]=button.dataset.agendaDate.split('-').map(Number);
           const dateLabel=new Intl.DateTimeFormat('pt-BR',{day:'numeric',month:'long',year:'numeric'}).format(new Date(eventYear,eventMonth-1,eventDay));
           container.querySelector('[data-agenda-detail]').innerHTML='<h4>'+dateLabel+'</h4><ul>'+events.map(event=>'<li>'+event.name+(event.status?'<br><small>'+event.status+'</small>':'')+'</li>').join('')+'</ul><p class="calendar-note">Consulte a casa para confirmar os detalhes da atividade.</p>';
         }));
