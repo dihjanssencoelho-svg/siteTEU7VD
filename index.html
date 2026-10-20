@@ -124,7 +124,7 @@
           button.setAttribute('aria-pressed','true');
           const events=agendaEvents[button.dataset.agendaDate];
           if(events.some(event=>event.kind==='gira'&&!event.closed)){
-            window.location.href='https://tu7vd.my.canva.site/reservadesenhas';
+            window.open('https://tu7vd.my.canva.site/reservadesenhas','_blank','noopener,noreferrer');
             return;
           }
           const [eventYear,eventMonth,eventDay]=button.dataset.agendaDate.split('-').map(Number);
