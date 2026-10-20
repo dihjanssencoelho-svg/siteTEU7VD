@@ -74,15 +74,21 @@
           const eventDate=new Date(year,monthIndex,day);
           const events=(agendaEvents[key]||[]).slice();
           if(eventDate>=today&&[3,4,6].includes(eventDate.getDay())){
-            const time=eventDate.getDay()===6?'18h-20h':'20h-22h';
-            events.push({name:'Aula de desenvolvimento mediunico - '+time,label:'Desenv. mediunico '+time+'*',kind:'development'});
+            const saturday=eventDate.getDay()===6;
+            const time=saturday?'18h-20h':'20h-22h';
+            events.push({
+              name:'Aula de desenvolvimento mediunico - '+time+(saturday?' - turma a iniciar':' - turma iniciada, sem inscricoes'),
+              label:saturday?'Desenv. 18h-20h*':'Desenv. 20h-22h (iniciada)',
+              status:saturday?'\u00danica turma aguardando in\u00edcio; data a confirmar.':'Turma iniciada. N\u00e3o h\u00e1 inscri\u00e7\u00f5es abertas.',
+              kind:'development'
+            });
           }
           if(!events.length)return '<div class="calendar-day"><span class="calendar-date">'+day+'</span></div>';
           const past=eventDate<today;
           const names=events.map(event=>event.name).join('; ');
           return '<button type="button" class="calendar-day has-event'+(past?' is-past':'')+'" data-agenda-date="'+key+'" aria-pressed="false" aria-label="'+day+' de '+monthLabel+': '+names+(past?', atividade j\u00e1 realizada':'')+'"><span class="calendar-date">'+day+'</span><span class="calendar-event-list">'+events.map(event=>'<span class="calendar-chip '+(event.kind==='course'?'course':event.kind==='development'?'development':event.kind==='class'?'class':'')+'">'+(event.label||event.name)+'</span>').join('')+'</span></button>';
         }).join('');
-        container.innerHTML='<div class="calendar-top"><button class="month-change" data-month="-1" aria-label="M\u00eas anterior">&#8249;</button><h3>'+heading+'</h3><button class="month-change" data-month="1" aria-label="Pr\u00f3ximo m\u00eas">&#8250;</button></div><p class="calendar-note">Datas dos fliers recebidos e aulas semanais previstas. As aulas de desenvolvimento est\u00e3o marcadas com * e aguardam confirma\u00e7\u00e3o da data de in\u00edcio.</p><div class="calendar-grid" aria-label="Agenda de '+monthLabel+'">'+weekdays.map(day=>'<div class="dayname">'+day+'</div>').join('')+calendarCells+'</div><div class="agenda-legend"><span><i></i>Giras e eventos</span><span><i class="legend-course"></i>Cursos</span><span><i class="legend-class"></i>Aulas</span><span><i class="legend-development"></i>Desenvolvimento mediunico*</span></div><div class="event-detail" data-agenda-detail aria-live="polite"><h4>Aulas de desenvolvimento mediunico</h4><p class="calendar-note">Quartas e quintas, 20h-22h; s\u00e1bados, 18h-20h. Data de in\u00edcio ainda a confirmar.</p></div>';
+        container.innerHTML='<div class="calendar-top"><button class="month-change" data-month="-1" aria-label="M\u00eas anterior">&#8249;</button><h3>'+heading+'</h3><button class="month-change" data-month="1" aria-label="Pr\u00f3ximo m\u00eas">&#8250;</button></div><p class="calendar-note">Datas dos fliers e aulas semanais. Quartas e quintas: turmas iniciadas, sem inscri\u00e7\u00f5es. S\u00e1bados*: \u00fanica turma aguardando in\u00edcio; data a confirmar.</p><div class="calendar-grid" aria-label="Agenda de '+monthLabel+'">'+weekdays.map(day=>'<div class="dayname">'+day+'</div>').join('')+calendarCells+'</div><div class="agenda-legend"><span><i></i>Giras e eventos</span><span><i class="legend-course"></i>Cursos</span><span><i class="legend-class"></i>Aulas</span><span><i class="legend-development"></i>Desenvolvimento mediunico (sabado*)</span></div><div class="event-detail" data-agenda-detail aria-live="polite"><h4>Aulas de desenvolvimento mediunico</h4><p class="calendar-note">Quartas e quintas, 20h-22h: turmas iniciadas, sem inscri\u00e7\u00f5es. S\u00e1bados, 18h-20h: \u00fanica turma aguardando in\u00edcio; data a confirmar.</p></div>';
         container.querySelectorAll('[data-month]').forEach(button=>button.addEventListener('click',()=>{
           shown=new Date(year,monthIndex+Number(button.dataset.month),1);render();
         }));
@@ -92,7 +98,7 @@
           const events=agendaEvents[button.dataset.agendaDate];
           const [eventYear,eventMonth,eventDay]=button.dataset.agendaDate.split('-').map(Number);
           const dateLabel=new Intl.DateTimeFormat('pt-BR',{day:'numeric',month:'long',year:'numeric'}).format(new Date(eventYear,eventMonth-1,eventDay));
-          container.querySelector('[data-agenda-detail]').innerHTML='<h4>'+dateLabel+'</h4><ul>'+events.map(event=>'<li>'+event.name+(event.kind==='development'?'<br><small>In\u00edcio ainda a confirmar.</small>':'')+'</li>').join('')+'</ul><p class="calendar-note">Confirme hor\u00e1rios e disponibilidade diretamente com a casa.</p>';
+          container.querySelector('[data-agenda-detail]').innerHTML='<h4>'+dateLabel+'</h4><ul>'+events.map(event=>'<li>'+event.name+(event.status?'<br><small>'+event.status+'</small>':'')+'</li>').join('')+'</ul><p class="calendar-note">Consulte a casa para confirmar os detalhes da atividade.</p>';
         }));
       }
       render();
