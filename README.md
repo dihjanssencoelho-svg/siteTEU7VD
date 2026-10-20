@@ -21,20 +21,20 @@ O Decap CMS usa o GitHub para gravar as alterações. Como o site é estático, 
 5. Em `admin/config.yml`, substitua somente `https://CONFIGURAR-WORKER-OAUTH.workers.dev` pelo endereço base real. Grave e publique essa alteração no repositório.
 6. No GitHub, proteja a branch `main` em **Settings → Rules → Rulesets** (ou **Settings → Branches**, conforme a interface disponível). Exija pull request e pelo menos uma aprovação antes de integrar alterações. Isso faz com que o painel sirva para propor publicações sem permitir que editores publiquem diretamente sem revisão.
 7. Em **Settings → Collaborators** (ou nas configurações de acesso da organização), conceda permissão **Write** às contas autorizadas a usar o painel. Não conceda acesso administrativo completo ao repositório se a pessoa só precisa cadastrar conteúdo.
-8. Abra o endereço `/admin/`, entre com uma conta autorizada e confirme que as coleções **Fliers e atividades**, **Giras, cursos, aulas e eventos**, **Fotos e vídeos de eventos** e **Aulas de desenvolvimento mediúnico** aparecem.
+8. Abra o endereço `/admin/`, entre com uma conta autorizada e confirme que as coleções **FLYERS e atividades**, **Giras, cursos, aulas e eventos**, **Fotos e vídeos de eventos** e **Aulas de desenvolvimento mediúnico** aparecem.
 
 O CMS usa o fluxo editorial. Ao salvar, a alteração fica em uma proposta de publicação para revisão; uma pessoa responsável aprova e integra a proposta à `main`. Só então o fluxo do GitHub Actions publica as mudanças. O Decap documenta este modo de rascunho e revisão em [Editorial Workflows](https://decapcms.org/docs/editorial-workflows/).
 
-## Passo a passo para enviar um flier
+## Passo a passo para enviar um flyer
 
 1. Acesse `/admin/` e faça login com a conta GitHub autorizada.
-2. Abra **Conteúdo do site → Agenda, fliers e registros**.
-3. Em **Fliers e atividades**, clique em **Add Fliers e atividades** (ou abra um item existente para substituir os dados).
-4. Preencha o título, envie a imagem no campo **Imagem do flier**, escreva um texto alternativo que descreva a imagem e uma legenda curta.
+2. Abra **Conteúdo do site → Agenda, FLYERS e registros**.
+3. Em **FLYERS e atividades**, clique em **Add FLYERS e atividades** (ou abra um item existente para substituir os dados).
+4. Preencha o título, envie a imagem no campo **Imagem do flyer**, escreva um texto alternativo que descreva a imagem e uma legenda curta.
 5. Salve como rascunho e mova a proposta para revisão.
 6. Uma pessoa revisora confere a imagem e a legenda, aprova e integra a proposta. Aguarde o fluxo **Publicar site no GitHub Pages** ficar verde.
 
-O flier aparece no carrossel **Fliers e atividades** e na janela **Cursos ministrados**. Use uma imagem JPG, PNG ou WebP legível em celular. O limite de envio configurado para um flier é 10 MB.
+O flyer aparece no carrossel **FLYERS e atividades** e na janela **Cursos ministrados**. Use uma imagem JPG, PNG ou WebP legível em celular. O limite de envio configurado para um flyer é 10 MB.
 
 ## Passo a passo para cadastrar uma gira, curso, aula ou evento
 
@@ -67,7 +67,7 @@ Abra a coleção correspondente, selecione o item, ajuste os campos e salve uma 
 ```text
 admin/index.html       # interface do Decap CMS
 admin/config.yml       # coleções e integração com GitHub/OAuth
-content/site.json      # fliers, agenda, registros e aulas semanais
+content/site.json      # FLYERS, agenda, registros e aulas semanais
 assets/uploads/        # mídia enviada pelo painel
 .github/workflows/     # publicação automática do Pages
 ```
