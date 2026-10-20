@@ -219,28 +219,46 @@
     document.querySelector('.close').addEventListener('click',()=>modal.close());modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});
     document.querySelectorAll('.arrow').forEach(btn=>btn.addEventListener('click',()=>document.querySelector(btn.dataset.target ? `#${btn.dataset.target}` : '#flyerCarousel').scrollBy({left:btn.dataset.scroll*380,behavior:'smooth'})));
     document.querySelector('#routeForm').addEventListener('submit',e=>{e.preventDefault();const destination='Rua Benedito Marcelino Braga, 512, Jardim São Judas, Taboão da Serra, SP';const origin=document.querySelector('#origin').value.trim();const mode=document.querySelector('#travelMode').value;const url=new URL('https://www.google.com/maps/dir/');url.searchParams.set('api','1');url.searchParams.set('destination',destination);url.searchParams.set('travelmode',mode);if(origin)url.searchParams.set('origin',origin);window.open(url.toString(),'_blank','noopener');});
-    const guidelineItems=[
-      {icon:'👕',title:'Vista-se com discrição',text:'Evite roupas curtas, decotadas ou transparentes. Prefira uma roupa confortável e adequada ao ambiente da gira.'},
-      {icon:'🧢',title:'Evite usar boné',text:'Não utilize bonés durante a gira.'},
-      {icon:'🔕',title:'Desligue os aparelhos',text:'Mantenha celulares e outros aparelhos sonoros desligados durante a atividade.'}
-    ];
-    const guideStage=document.querySelector('#guidelineStage'),guideCount=document.querySelector('#guidelineCount'),guideToggle=document.querySelector('#guidelineToggle'),guideCarousel=document.querySelector('#guidelineCarousel');
-    let guideIndex=0,guideTimer=null,guidePaused=window.matchMedia('(prefers-reduced-motion: reduce)').matches,guideHover=false,guideFocus=false;
-    guideToggle.setAttribute('aria-pressed',String(guidePaused));guideToggle.textContent=guidePaused?'Iniciar rotação':'Pausar';
-    function renderGuideline(announce=false){const item=guidelineItems[guideIndex];guideStage.setAttribute('aria-live',announce?'polite':'off');guideStage.innerHTML='<article class="guideline-card"><div class="guideline-icon" aria-hidden="true">'+item.icon+'</div><div><h3>'+item.title+'</h3><p>'+item.text+'</p></div></article>';guideCount.textContent=(guideIndex+1)+' de '+guidelineItems.length;if(announce)setTimeout(()=>guideStage.setAttribute('aria-live','off'),1200);}
-    function scheduleGuidelines(){clearInterval(guideTimer);guideTimer=null;if(!guidePaused&&!guideHover&&!guideFocus&&!document.hidden)guideTimer=setInterval(()=>{guideIndex=(guideIndex+1)%guidelineItems.length;renderGuideline();},6500);}
-    function moveGuideline(amount){guideIndex=(guideIndex+amount+guidelineItems.length)%guidelineItems.length;renderGuideline(true);scheduleGuidelines();}
-    renderGuideline();
-    document.querySelector('#guidelinePrevious').addEventListener('click',()=>moveGuideline(-1));
-    document.querySelector('#guidelineNext').addEventListener('click',()=>moveGuideline(1));
-    guideToggle.addEventListener('click',()=>{guidePaused=!guidePaused;guideToggle.setAttribute('aria-pressed',String(guidePaused));guideToggle.textContent=guidePaused?'Retomar':'Pausar';scheduleGuidelines();});
-    guideCarousel.addEventListener('mouseenter',()=>{guideHover=true;scheduleGuidelines();});
-    guideCarousel.addEventListener('mouseleave',()=>{guideHover=false;scheduleGuidelines();});
-    guideCarousel.addEventListener('focusin',()=>{guideFocus=true;scheduleGuidelines();});
-    guideCarousel.addEventListener('focusout',event=>{if(!guideCarousel.contains(event.relatedTarget)){guideFocus=false;scheduleGuidelines();}});
-    document.addEventListener('visibilitychange',scheduleGuidelines);
-    scheduleGuidelines();
     const toggle=document.querySelector('.menu-toggle'), links=document.querySelector('.navlinks');toggle.addEventListener('click',()=>{const open=links.classList.toggle('open');toggle.setAttribute('aria-expanded',open)});links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{links.classList.remove('open');toggle.setAttribute('aria-expanded','false')}));
+    })();
+  </script>
+  <script>
+    (()=>{
+      const carousel=document.querySelector('#guidelineCarousel');
+      const stage=document.querySelector('#guidelineStage');
+      const count=document.querySelector('#guidelineCount');
+      const toggle=document.querySelector('#guidelineToggle');
+      if(!carousel||!stage||!count||!toggle)return;
+      const items=[
+        {icon:'👕',title:'Vista-se com discrição',text:'Evite roupas curtas, decotadas ou transparentes. Prefira uma roupa confortável e adequada ao ambiente da gira.'},
+        {icon:'🧢',title:'Evite usar boné',text:'Não utilize bonés durante a gira.'},
+        {icon:'🔕',title:'Desligue os aparelhos',text:'Mantenha celulares e outros aparelhos sonoros desligados durante a atividade.'}
+      ];
+      let index=0,timer=null,paused=window.matchMedia('(prefers-reduced-motion: reduce)').matches,hover=false,focus=false;
+      toggle.setAttribute('aria-pressed',String(paused));
+      toggle.textContent=paused?'Iniciar rotação':'Pausar';
+      function render(announce=false){
+        const item=items[index];
+        stage.setAttribute('aria-live',announce?'polite':'off');
+        stage.innerHTML='<article class="guideline-card"><div class="guideline-icon" aria-hidden="true">'+item.icon+'</div><div><h3>'+item.title+'</h3><p>'+item.text+'</p></div></article>';
+        count.textContent=(index+1)+' de '+items.length;
+        if(announce)setTimeout(()=>stage.setAttribute('aria-live','off'),1200);
+      }
+      function schedule(){
+        clearInterval(timer);timer=null;
+        if(!paused&&!hover&&!focus&&!document.hidden)timer=setInterval(()=>{index=(index+1)%items.length;render();},6500);
+      }
+      function move(amount){index=(index+amount+items.length)%items.length;render(true);schedule();}
+      render();
+      document.querySelector('#guidelinePrevious').addEventListener('click',()=>move(-1));
+      document.querySelector('#guidelineNext').addEventListener('click',()=>move(1));
+      toggle.addEventListener('click',()=>{paused=!paused;toggle.setAttribute('aria-pressed',String(paused));toggle.textContent=paused?'Retomar':'Pausar';schedule();});
+      carousel.addEventListener('mouseenter',()=>{hover=true;schedule();});
+      carousel.addEventListener('mouseleave',()=>{hover=false;schedule();});
+      carousel.addEventListener('focusin',()=>{focus=true;schedule();});
+      carousel.addEventListener('focusout',event=>{if(!carousel.contains(event.relatedTarget)){focus=false;schedule();}});
+      document.addEventListener('visibilitychange',schedule);
+      schedule();
     })();
   </script>
 </body>
