@@ -1,120 +1,90 @@
-# Atualização do site TEU7VD
+# Painel administrativo do TEU7VD
 
-Este guia explica como adicionar fliers, fotos, vídeos e atividades sem quebrar a organização do site. O site é estático: os arquivos ficam em `assets/`, enquanto os textos, datas e a associação entre cada arquivo e seu lugar no site são configurados em `index.html`.
+Este site continua hospedado no GitHub Pages. O painel administrativo é o Decap CMS e fica em `/admin/`. O conteúdo editável está em `content/site.json`; imagens e vídeos enviados pelo painel ficam em `assets/uploads/`. Quando uma alteração é aprovada e chega à branch `main`, o GitHub Actions atualiza o site publicado.
 
-## Estrutura do repositório
+## Acesso ao painel
+
+Endereço: <https://dihjanssencoelho-svg.github.io/siteTEU7VD/admin/>
+
+O acesso é feito com uma conta GitHub autorizada a escrever no repositório `dihjanssencoelho-svg/siteTEU7VD`. Uma pessoa administradora do repositório deve conceder a permissão **Write** às pessoas que poderão usar o painel. Não compartilhe senhas, tokens ou códigos de autenticação.
+
+> **Configuração inicial necessária:** antes do primeiro login funcionar, uma pessoa responsável pelo repositório precisa configurar o provedor OAuth do GitHub e trocar o endereço de exemplo `https://CONFIGURAR-WORKER-OAUTH.workers.dev` em `admin/config.yml` pela URL real do serviço OAuth. Veja a seção **Configuração inicial do acesso** abaixo. O painel e as coleções já estão preparados, mas o GitHub Pages sozinho não pode guardar o segredo OAuth.
+
+## Configuração inicial do acesso
+
+O Decap CMS usa o GitHub para gravar as alterações. Como o site é estático, o login OAuth precisa de um pequeno serviço seguro separado. A configuração abaixo usa um Cloudflare Worker para esse login; o site continua no GitHub Pages.
+
+1. Uma pessoa responsável deve criar ou usar uma conta Cloudflare e criar uma aplicação de autenticação para o painel. Uma implementação comunitária compatível com Decap CMS e Cloudflare Workers está documentada em [decap-cms-github-oauth-provider-cloudflare](https://github.com/ottmartens/decap-cms-github-oauth-provider-cloudflare). Revise o código e as instruções do projeto antes de conectá-lo à conta GitHub do templo.
+2. Crie a aplicação GitHub indicada pelo provedor. Configure a página inicial como `https://dihjanssencoelho-svg.github.io/siteTEU7VD/` e a URL de callback como `https://NOME-DO-WORKER.SEU-USUARIO.workers.dev/callback` (use a URL exata que o Worker informar).
+3. Implante o provedor no Cloudflare seguindo as instruções dele. Guarde o **Client ID** e o **Client Secret** em variáveis secretas do Worker/Cloudflare. Nunca coloque o Client Secret em `index.html`, `config.yml`, `content/site.json` ou em uma mensagem pública.
+4. Depois da implantação, copie o endereço base do Worker, por exemplo `https://teu7vd-cms-auth.seu-usuario.workers.dev`.
+5. Em `admin/config.yml`, substitua somente `https://CONFIGURAR-WORKER-OAUTH.workers.dev` pelo endereço base real. Grave e publique essa alteração no repositório.
+6. No GitHub, proteja a branch `main` em **Settings → Rules → Rulesets** (ou **Settings → Branches**, conforme a interface disponível). Exija pull request e pelo menos uma aprovação antes de integrar alterações. Isso faz com que o painel sirva para propor publicações sem permitir que editores publiquem diretamente sem revisão.
+7. Em **Settings → Collaborators** (ou nas configurações de acesso da organização), conceda permissão **Write** às contas autorizadas a usar o painel. Não conceda acesso administrativo completo ao repositório se a pessoa só precisa cadastrar conteúdo.
+8. Abra o endereço `/admin/`, entre com uma conta autorizada e confirme que as coleções **Fliers e atividades**, **Giras, cursos, aulas e eventos**, **Fotos e vídeos de eventos** e **Aulas de desenvolvimento mediúnico** aparecem.
+
+O CMS usa o fluxo editorial. Ao salvar, a alteração fica em uma proposta de publicação para revisão; uma pessoa responsável aprova e integra a proposta à `main`. Só então o fluxo do GitHub Actions publica as mudanças. O Decap documenta este modo de rascunho e revisão em [Editorial Workflows](https://decapcms.org/docs/editorial-workflows/).
+
+## Passo a passo para enviar um flier
+
+1. Acesse `/admin/` e faça login com a conta GitHub autorizada.
+2. Abra **Conteúdo do site → Agenda, fliers e registros**.
+3. Em **Fliers e atividades**, clique em **Add Fliers e atividades** (ou abra um item existente para substituir os dados).
+4. Preencha o título, envie a imagem no campo **Imagem do flier**, escreva um texto alternativo que descreva a imagem e uma legenda curta.
+5. Salve como rascunho e mova a proposta para revisão.
+6. Uma pessoa revisora confere a imagem e a legenda, aprova e integra a proposta. Aguarde o fluxo **Publicar site no GitHub Pages** ficar verde.
+
+O flier aparece no carrossel **Fliers e atividades** e na janela **Cursos ministrados**. Use uma imagem JPG, PNG ou WebP legível em celular. O limite de envio configurado para um flier é 10 MB.
+
+## Passo a passo para cadastrar uma gira, curso, aula ou evento
+
+1. Na mesma coleção, abra **Giras, cursos, aulas e eventos** e adicione um item.
+2. Informe a data no formato `AAAA-MM-DD`, por exemplo `2026-11-06`.
+3. Escreva o nome que será mostrado no site.
+4. Escolha o tipo correto: **Gira**, **Curso**, **Aula**, **Desenvolvimento mediúnico** ou **Outro evento**.
+5. Marque **Gira fechada ao público** somente quando a gira realmente não for aberta a visitantes.
+6. Se o nome ficar longo no calendário, informe um **Nome curto na agenda**. Use **Situação ou observação** para informar, por exemplo, que uma turma já começou ou que a data ainda será confirmada.
+7. Salve como rascunho, envie para revisão e aguarde a aprovação e a publicação.
+
+As datas cadastradas alimentam os calendários e o carrossel de próximas giras. As aulas semanais de desenvolvimento mediúnico são geradas automaticamente de acordo com a configuração de dias, horários e situação da turma. Para alterar esses dados, edite a coleção **Aulas de desenvolvimento mediúnico**. As quartas e quintas já iniciadas devem continuar com a situação de turma iniciada; a turma de sábado pode ficar como aguardando início/data a confirmar.
+
+## Passo a passo para enviar fotos e vídeos de eventos
+
+1. Abra **Fotos e vídeos de eventos** e adicione um item.
+2. Informe o título. Se quiser que o evento também apareça no calendário de registros, preencha a data no formato `AAAA-MM-DD`. Deixe em branco para um registro sem data definida.
+3. Escolha **Foto** ou **Vídeo** no campo tipo de arquivo.
+4. Envie ou selecione o arquivo no campo **Foto ou vídeo**. O limite configurado para um registro é 25 MB.
+5. Salve como rascunho, envie para revisão e aguarde a aprovação e publicação.
+
+Fotos e vídeos aprovados aparecem na seção **Registros**. Se o item tiver data, o calendário de registros também destacará o dia e permitirá abrir a mídia correspondente. Para vídeos, use MP4 (H.264/AAC) sempre que possível; vídeos grandes devem ser reduzidos antes do envio. O repositório é destinado a arquivos leves. Para acervos de vídeo grandes, será necessário configurar armazenamento/CDN externo e adaptar o campo de mídia.
+
+## Alterar uma publicação ou corrigir um erro
+
+Abra a coleção correspondente, selecione o item, ajuste os campos e salve uma nova proposta. Para retirar uma atividade, remova o item da coleção de agenda. Para substituir uma imagem ou vídeo, selecione o novo arquivo no campo de mídia e salve. Depois da aprovação, confira a aba **Actions** e abra o site em computador e celular.
+
+## Onde os arquivos e os dados ficam
 
 ```text
-.
-├── index.html                 # conteúdo, agenda e estrutura das seções
-├── assets/                    # logos, fliers, fotos e vídeos
-└── .github/workflows/         # publicação automática no GitHub Pages
+admin/index.html       # interface do Decap CMS
+admin/config.yml       # coleções e integração com GitHub/OAuth
+content/site.json      # fliers, agenda, registros e aulas semanais
+assets/uploads/        # mídia enviada pelo painel
+.github/workflows/     # publicação automática do Pages
 ```
 
-O site é publicado pelo GitHub Pages sempre que uma alteração chega à branch `main`. O endereço publicado é `https://dihjanssencoelho-svg.github.io/siteTEU7VD/`.
+Evite editar `content/site.json` manualmente enquanto outra pessoa estiver com uma proposta aberta. Não renomeie ou apague arquivos dentro de `assets/uploads/` sem primeiro corrigir o item que os utiliza.
 
-## Antes de inserir arquivos
+## Problemas comuns
 
-- Use nomes curtos, em minúsculas, sem espaços ou acentos. Exemplo: `gira-caboclos-2026-11-06.jpg`.
-- Coloque imagens e vídeos dentro de `assets/` e use o caminho começando por `assets/` no código.
-- Para fliers, prefira JPG ou WebP. Para fotos, JPG ou WebP. Para vídeos, MP4 com vídeo H.264 e áudio AAC costuma funcionar nos navegadores.
-- Comprima os arquivos antes de enviar. Imagens com até cerca de 1–2 MB e vídeos curtos com tamanho reduzido carregam melhor em celulares.
-- Não apague ou renomeie um arquivo já usado sem atualizar todas as referências a ele em `index.html`.
-- Confirme autorização para publicar fotos e vídeos de pessoas identificáveis.
+- **A tela `/admin/` abre, mas o login falha:** confirme que o endereço `base_url` em `admin/config.yml` corresponde ao Worker implantado e que o callback cadastrado na aplicação GitHub está correto.
+- **A conta entra, mas não consegue salvar:** confirme que ela tem permissão **Write** no repositório.
+- **Uma proposta não aparece no site:** verifique se foi aprovada e integrada à `main`; depois confira se o GitHub Actions concluiu a publicação.
+- **Imagem ou vídeo não aparece:** confira se a proposta foi aprovada, se o item ainda referencia o arquivo enviado e se o formato/tamanho é suportado pelo navegador.
+- **Duas pessoas alteraram o mesmo conteúdo:** peça a uma pessoa revisora para comparar as propostas e integrar uma de cada vez, evitando substituir dados mais recentes.
 
-## Onde cada conteúdo aparece
+## Cuidados
 
-### Fliers de cursos e atividades
-
-1. Envie o arquivo para `assets/`.
-2. Em `index.html`, localize `const flyers = [...]`.
-3. Inclua uma entrada com o título e o caminho do arquivo, por exemplo:
-
-```js
-['Curso de exemplo', 'assets/curso-exemplo.jpg']
-```
-
-O carrossel **Fliers e atividades** usa os fliers cadastrados na página. O quadro de cursos também usa essa lista para mostrar as imagens quando aberto. Para que o flier apareça como cartão no carrossel, a imagem precisa ser adicionada à estrutura HTML de `#flyerCarousel`, com `src="assets/arquivo.jpg"`, texto alternativo (`alt`) e legenda (`caption`). Use os cartões existentes como modelo e mantenha a classe `slide`.
-
-### Fotos e vídeos de eventos ou giras
-
-1. Envie o arquivo para `assets/` com nome que identifique o evento e a data, por exemplo `gira-eres-2026-10-11.mp4`.
-2. Para exibir uma foto, use uma imagem com legenda no carrossel ou no conteúdo do registro. Para vídeo, use este formato:
-
-```html
-<article class="media-card">
-  <video controls preload="metadata" playsinline>
-    <source src="assets/gira-eres-2026-10-11.mp4" type="video/mp4">
-    Seu navegador não reproduz este vídeo.
-  </video>
-  <p>Gira de Erês · 11 de outubro de 2026</p>
-</article>
-```
-
-3. No calendário de **Registros**, localize a lista `events` dentro da opção `calendar` de `openModal`. Adicione a data como chave no formato `AAAA-MM-DD` e informe nome, data por extenso e caminho do vídeo:
-
-```js
-'2026-10-11': {
-  name: 'Gira de Erês',
-  date: '11 de outubro de 2026',
-  video: 'assets/gira-eres-2026-10-11.mp4'
-}
-```
-
-O calendário de registros mostra o vídeo ao clicar na data. Para a foto ou vídeo também aparecer diretamente na seção **Registros**, adicione um `article.media-card` como o exemplo acima dentro do carrossel `#recordsCarousel`.
-
-### Datas de giras, cursos, aulas e eventos na agenda
-
-No início do script de `index.html`, localize `const agendaEvents = { ... }`. Cada data usa o formato `AAAA-MM-DD`; a atividade pode ter um destes tipos:
-
-- `gira` — gira. Para evento fechado, acrescente `closed: true`.
-- `course` — curso.
-- `class` — aula ou atividade regular.
-- `development` — aula de desenvolvimento mediúnico.
-- `event` — outro evento.
-
-Exemplos:
-
-```js
-'2026-11-06': [{ name: 'Gira de Caboclos', kind: 'gira' }],
-'2026-11-15': [{ name: 'Gira fechada - Homenagem à Umbanda', kind: 'gira', closed: true }],
-'2026-12-13': [{ name: 'Confraternização da família TEU7VD', kind: 'event' }]
-```
-
-Uma data pode ter mais de uma atividade. Nesse caso, mantenha todas dentro da lista:
-
-```js
-'2026-11-07': [
-  { name: 'Curso de exemplo', kind: 'course' },
-  { name: 'Aula de exemplo', kind: 'class' }
-]
-```
-
-As datas dessa lista alimentam os calendários e o carrossel de próximas giras. O calendário e os cartões usam o nome da atividade para mostrar o destaque e o símbolo. Datas futuras fora do mês vigente seguem as regras atuais do site e avisam que a agenda de reservas ainda pode mudar.
-
-## Atualizar pelo GitHub em qualquer computador
-
-O repositório no GitHub é a cópia compartilhada do site. Assim, uma pessoa pode atualizar o conteúdo usando o navegador de qualquer computador com acesso ao repositório; não precisa usar a máquina onde o site foi criado.
-
-1. Entre em [github.com/dihjanssencoelho-svg/siteTEU7VD](https://github.com/dihjanssencoelho-svg/siteTEU7VD) e faça login.
-2. Abra a pasta `assets` e escolha **Add file → Upload files** para enviar fotos, fliers e vídeos. Confirme que os arquivos foram adicionados dentro de `assets/`.
-3. Para alterar textos, agenda ou referências dos arquivos, abra `index.html`, escolha o ícone de edição e faça as alterações seguindo os exemplos deste guia.
-4. Revise a alteração e use **Commit changes**. Para uma atualização simples e urgente, pode gravar diretamente na branch `main`. Para revisão por outra pessoa, crie uma branch e envie um *pull request* para `main`.
-5. Depois do commit ou da aprovação do *pull request*, abra a aba **Actions** do repositório. Aguarde o fluxo de publicação ficar verde e acesse o site publicado para conferir as imagens e datas.
-
-### Trabalho com várias pessoas
-
-- Combine quem vai atualizar cada atividade e peça para a equipe sempre enviar os arquivos ao repositório compartilhado.
-- Prefira uma branch e um *pull request* por atualização. Isso permite revisar nomes, datas e arquivos antes da publicação.
-- Evite editar o mesmo `index.html` ao mesmo tempo. Se houver conflito, uma pessoa deve comparar as alterações e juntar as duas antes de publicar.
-- O histórico de commits mostra quem mudou cada conteúdo e permite localizar versões anteriores.
-
-## Conferência antes da publicação
-
-- A data está no formato `AAAA-MM-DD` e corresponde ao ano correto?
-- O caminho e o nome do arquivo coincidem exatamente com o arquivo dentro de `assets/`?
-- A atividade está na seção certa e tem uma legenda clara?
-- O flier, a foto ou o vídeo abre no site em computador e celular?
-- O fluxo de **Actions** concluiu com sucesso?
-
-> Observação: o site não possui atualmente um painel administrativo. A edição pelo navegador do GitHub é a alternativa compartilhada já disponível; automatizar um formulário/painel para publicar conteúdo exigiria implementar e hospedar um CMS ou serviço com armazenamento.
+- Não compartilhe o Client Secret OAuth, tokens ou códigos de login.
+- Conceda acesso ao repositório apenas às pessoas que precisam editar ou revisar conteúdo.
+- Antes de publicar fotos ou vídeos com pessoas identificáveis, confirme que há autorização para divulgação.
+- O histórico do GitHub registra as alterações e permite localizar quem publicou cada atualização.

@@ -1,0 +1,93 @@
+backend:
+  name: github
+  repo: dihjanssencoelho-svg/siteTEU7VD
+  branch: main
+  base_url: https://CONFIGURAR-WORKER-OAUTH.workers.dev
+
+publish_mode: editorial_workflow
+site_url: https://dihjanssencoelho-svg.github.io/siteTEU7VD/
+display_url: https://dihjanssencoelho-svg.github.io/siteTEU7VD/
+media_folder: assets/uploads
+public_folder: assets/uploads
+
+collections:
+  - name: site
+    label: Conteúdo do site
+    files:
+      - name: conteudo
+        label: Agenda, fliers e registros
+        file: content/site.json
+        format: json
+        fields:
+          - label: Fliers e atividades
+            name: flyers
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { label: Título do flier, name: title, widget: string }
+              - label: Imagem do flier
+                name: image
+                widget: image
+                media_folder: /assets/uploads
+                media_library:
+                  config:
+                    max_file_size: 10000000
+              - { label: Texto alternativo, name: alt, widget: string }
+              - { label: Legenda no site, name: caption, widget: string }
+          - label: Giras, cursos, aulas e eventos
+            name: agenda
+            widget: list
+            summary: "{{fields.date}} · {{fields.name}}"
+            fields:
+              - label: Data
+                name: date
+                widget: string
+                pattern: ["^\\d{4}-\\d{2}-\\d{2}$", "Use o formato AAAA-MM-DD, por exemplo 2026-11-06."]
+              - { label: Nome da atividade, name: name, widget: string }
+              - label: Tipo de atividade
+                name: kind
+                widget: select
+                options:
+                  - { label: Gira, value: gira }
+                  - { label: Curso, value: course }
+                  - { label: Aula, value: class }
+                  - { label: Desenvolvimento mediúnico, value: development }
+                  - { label: Outro evento, value: event }
+              - { label: Gira fechada ao público, name: closed, widget: boolean, default: false, required: false }
+              - { label: Nome curto na agenda (opcional), name: label, widget: string, required: false }
+              - { label: Situação ou observação (opcional), name: status, widget: string, required: false }
+          - label: Fotos e vídeos de eventos
+            name: records
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - label: Data (opcional)
+                name: date
+                widget: string
+                required: false
+                pattern: ["^$|^\\d{4}-\\d{2}-\\d{2}$", "Deixe em branco ou use AAAA-MM-DD."]
+              - { label: Título, name: title, widget: string }
+              - label: Tipo de arquivo
+                name: mediaType
+                widget: select
+                options:
+                  - { label: Foto, value: image }
+                  - { label: Vídeo, value: video }
+              - label: Foto ou vídeo
+                name: media
+                widget: file
+                media_folder: /assets/uploads
+                media_library:
+                  config:
+                    max_file_size: 25000000
+          - label: Aulas de desenvolvimento mediúnico
+            name: developmentClasses
+            widget: object
+            fields:
+              - { label: Quarta-feira, name: wednesday, widget: boolean, default: true }
+              - { label: Quinta-feira, name: thursday, widget: boolean, default: true }
+              - { label: Há aula aos sábados, name: saturday, widget: boolean, default: true }
+              - { label: Horário de quarta e quinta, name: weekdayTime, widget: string }
+              - { label: Horário de sábado, name: saturdayTime, widget: string }
+              - { label: Situação da turma de quarta/quinta, name: weekdayStatus, widget: string }
+              - { label: Situação da turma de sábado, name: saturdayStatus, widget: string }
