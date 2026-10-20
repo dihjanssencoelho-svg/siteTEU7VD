@@ -50,7 +50,7 @@
       '2026-10-31':[{name:'Magia Divina - 7 Chamas - 13h-14h30',kind:'course'}],
       '2026-11-06':[{name:'Gira de Caboclos \ud83c\udf3f',kind:'gira'}],
       '2026-11-13':[{name:'Gira de Pretos Velhos',kind:'gira'}],
-      '2026-11-15':[{name:'Gira fechada - Homenagem \u00e0 Umbanda',kind:'gira'}],
+      '2026-11-15':[{name:'Gira fechada - Homenagem \u00e0 Umbanda',kind:'gira',closed:true}],
       '2026-11-20':[{name:'Gira de Marinheiros',kind:'gira'}],
       '2026-11-27':[{name:'Gira de Exús e Pombagiras \ud83c\udfad\ud83c\udf39',kind:'gira'}],
       '2026-12-05':[{name:'Homenagem \u00e0 Iemanjá - Praia',kind:'gira'}],
@@ -88,7 +88,7 @@
           const names=events.map(event=>event.name).join('; ');
           return '<button type="button" class="calendar-day has-event'+(past?' is-past':'')+'" data-agenda-date="'+key+'" aria-pressed="false" aria-label="'+day+' de '+monthLabel+': '+names+(past?', atividade j\u00e1 realizada':'')+'"><span class="calendar-date">'+day+'</span><span class="calendar-event-list">'+events.map(event=>'<span class="calendar-chip '+(event.kind==='course'?'course':event.kind==='development'?'development':event.kind==='class'?'class':'')+'">'+(event.label||event.name)+'</span>').join('')+'</span></button>';
         }).join('');
-        container.innerHTML='<div class="calendar-top"><button class="month-change" data-month="-1" aria-label="M\u00eas anterior">&#8249;</button><h3>'+heading+'</h3><button class="month-change" data-month="1" aria-label="Pr\u00f3ximo m\u00eas">&#8250;</button></div><p class="calendar-note">Datas dos fliers e aulas semanais. Quartas e quintas: turmas iniciadas, sem inscri\u00e7\u00f5es. S\u00e1bados*: \u00fanica turma aguardando in\u00edcio; data a confirmar.</p><div class="calendar-grid" aria-label="Agenda de '+monthLabel+'">'+weekdays.map(day=>'<div class="dayname">'+day+'</div>').join('')+calendarCells+'</div><div class="agenda-legend"><span><i></i>Giras e eventos</span><span><i class="legend-course"></i>Cursos</span><span><i class="legend-class"></i>Aulas</span><span><i class="legend-development"></i>Desenvolvimento mediunico (sabado*)</span></div><div class="event-detail" data-agenda-detail aria-live="polite"><h4>Aulas de desenvolvimento mediunico</h4><p class="calendar-note">Quartas e quintas, 20h-22h: turmas iniciadas, sem inscri\u00e7\u00f5es. S\u00e1bados, 18h-20h: \u00fanica turma aguardando in\u00edcio; data a confirmar.</p></div>';
+        container.innerHTML='<div class="calendar-top"><button class="month-change" data-month="-1" aria-label="M\u00eas anterior">&#8249;</button><h3>'+heading+'</h3><button class="month-change" data-month="1" aria-label="Pr\u00f3ximo m\u00eas">&#8250;</button></div><p class="calendar-note">Datas dos fliers e aulas semanais. Quartas e quintas: turmas iniciadas, sem inscri\u00e7\u00f5es. S\u00e1bados*: \u00fanica turma aguardando in\u00edcio; data a confirmar. Clique nas datas de gira para abrir as reservas; giras fechadas n\u00e3o redirecionam.</p><div class="calendar-grid" aria-label="Agenda de '+monthLabel+'">'+weekdays.map(day=>'<div class="dayname">'+day+'</div>').join('')+calendarCells+'</div><div class="agenda-legend"><span><i></i>Giras e eventos</span><span><i class="legend-course"></i>Cursos</span><span><i class="legend-class"></i>Aulas</span><span><i class="legend-development"></i>Desenvolvimento mediunico (sabado*)</span></div><div class="event-detail" data-agenda-detail aria-live="polite"><h4>Aulas de desenvolvimento mediunico</h4><p class="calendar-note">Quartas e quintas, 20h-22h: turmas iniciadas, sem inscri\u00e7\u00f5es. S\u00e1bados, 18h-20h: \u00fanica turma aguardando in\u00edcio; data a confirmar.</p></div>';
         container.querySelectorAll('[data-month]').forEach(button=>button.addEventListener('click',()=>{
           shown=new Date(year,monthIndex+Number(button.dataset.month),1);render();
         }));
@@ -96,6 +96,10 @@
           container.querySelectorAll('[data-agenda-date]').forEach(day=>day.setAttribute('aria-pressed','false'));
           button.setAttribute('aria-pressed','true');
           const events=agendaEvents[button.dataset.agendaDate];
+          if(events.some(event=>event.kind==='gira'&&!event.closed)){
+            window.location.href='https://tu7vd.my.canva.site/reservadesenhas';
+            return;
+          }
           const [eventYear,eventMonth,eventDay]=button.dataset.agendaDate.split('-').map(Number);
           const dateLabel=new Intl.DateTimeFormat('pt-BR',{day:'numeric',month:'long',year:'numeric'}).format(new Date(eventYear,eventMonth-1,eventDay));
           container.querySelector('[data-agenda-detail]').innerHTML='<h4>'+dateLabel+'</h4><ul>'+events.map(event=>'<li>'+event.name+(event.status?'<br><small>'+event.status+'</small>':'')+'</li>').join('')+'</ul><p class="calendar-note">Consulte a casa para confirmar os detalhes da atividade.</p>';
