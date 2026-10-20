@@ -15,17 +15,17 @@ collections:
     label: Conteúdo do site
     files:
       - name: conteudo
-        label: Agenda, fliers e registros
+        label: Agenda, FLYERS e registros
         file: content/site.json
         format: json
         fields:
-          - label: Fliers e atividades
+          - label: FLYERS e atividades
             name: flyers
             widget: list
             summary: "{{fields.title}}"
             fields:
-              - { label: Título do flier, name: title, widget: string }
-              - label: Imagem do flier
+              - { label: Título do flyer, name: title, widget: string }
+              - label: Imagem do flyer
                 name: image
                 widget: image
                 media_folder: /assets/uploads
