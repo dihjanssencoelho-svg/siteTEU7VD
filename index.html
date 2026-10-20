@@ -234,7 +234,7 @@
         {icon:'🧢',title:'Evite usar boné',text:'Não utilize bonés durante a gira.'},
         {icon:'🔕',title:'Desligue os aparelhos',text:'Mantenha celulares e outros aparelhos sonoros desligados durante a atividade.'}
       ];
-      let index=0,timer=null,paused=window.matchMedia('(prefers-reduced-motion: reduce)').matches,hover=false,focus=false;
+      let index=0,timer=null,paused=false;
       toggle.setAttribute('aria-pressed',String(paused));
       toggle.textContent=paused?'Iniciar rotação':'Pausar';
       function render(announce=false){
@@ -246,17 +246,13 @@
       }
       function schedule(){
         clearInterval(timer);timer=null;
-        if(!paused&&!hover&&!focus&&!document.hidden)timer=setInterval(()=>{index=(index+1)%items.length;render();},6500);
+        if(!paused&&!document.hidden)timer=setInterval(()=>{index=(index+1)%items.length;render();},6500);
       }
       function move(amount){index=(index+amount+items.length)%items.length;render(true);schedule();}
       render();
       document.querySelector('#guidelinePrevious').addEventListener('click',()=>move(-1));
       document.querySelector('#guidelineNext').addEventListener('click',()=>move(1));
       toggle.addEventListener('click',()=>{paused=!paused;toggle.setAttribute('aria-pressed',String(paused));toggle.textContent=paused?'Retomar':'Pausar';schedule();});
-      carousel.addEventListener('mouseenter',()=>{hover=true;schedule();});
-      carousel.addEventListener('mouseleave',()=>{hover=false;schedule();});
-      carousel.addEventListener('focusin',()=>{focus=true;schedule();});
-      carousel.addEventListener('focusout',event=>{if(!carousel.contains(event.relatedTarget)){focus=false;schedule();}});
       document.addEventListener('visibilitychange',schedule);
       schedule();
     })();
