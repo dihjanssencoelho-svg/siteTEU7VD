@@ -247,7 +247,7 @@
       document.querySelector('#giraEmpty').hidden=upcoming.length>0;
     }
     mountGiraCarousel(document.querySelector('#giraCarousel'));
-    document.querySelectorAll('[data-gira-scroll]').forEach(button=>button.addEventListener('click',()=>{const track=document.querySelector('#giraCarousel');track.scrollBy({left:Number(button.dataset.giraScroll)*(track.clientWidth+10),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}));
+    document.querySelectorAll('[data-gira-scroll]').forEach(button=>button.addEventListener('click',()=>{const track=document.querySelector('#giraCarousel');const card=track.querySelector('.gira-card');if(!track||!card)return;const styles=getComputedStyle(track);const gap=parseFloat(styles.columnGap||styles.gap)||0;const step=card.getBoundingClientRect().width+gap;track.scrollBy({left:Number(button.dataset.giraScroll)*step,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}));
     document.querySelector('#giraCarousel').addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();document.querySelector('#giraCarousel').scrollBy({left:(event.key==='ArrowRight'?1:-1)*document.querySelector('#giraCarousel').clientWidth,behavior:'auto'});}});
     document.querySelectorAll('[data-agenda-notice]').forEach(button=>button.addEventListener('click',()=>showAgendaAvailabilityNotice(button.dataset.agendaNotice)));
     function openModal(which){
