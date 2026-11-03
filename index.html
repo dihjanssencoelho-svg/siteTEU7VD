@@ -79,6 +79,35 @@
     const modal=document.querySelector('#modal'), title=document.querySelector('#modalTitle'), body=document.querySelector('#modalBody');
     const flyers=siteContent.flyers||[], records=siteContent.records||[], development=siteContent.developmentClasses||{};
     const agendaEvents=(siteContent.agenda||[]).reduce((map,item)=>{if(!item.date)return map;(map[item.date]||(map[item.date]=[])).push(item);return map;},{});
+    // A disponibilidade pública usa a mesma fonte do portal de reservas:
+    // giras ativas e publicadas no Supabase. Em caso de falha, não abre reservas.
+    const RESERVATION_SUPABASE_URL='https://emwnytvlbpgiwqswojze.supabase.co';
+    const RESERVATION_SUPABASE_KEY='sb_publishable_gKuJbxS6UBnsodjgdasDIQ_G2k_FL31';
+    try{
+      const publishedUrl=new URL('/rest/v1/giras',RESERVATION_SUPABASE_URL);
+      publishedUrl.searchParams.set('select','id,titulo,data_gira,ativa,status');
+      publishedUrl.searchParams.set('ativa','eq.true');
+      publishedUrl.searchParams.set('status','eq.publicada');
+      publishedUrl.searchParams.set('order','data_gira.asc');
+      const publishedResponse=await fetch(publishedUrl,{headers:{apikey:RESERVATION_SUPABASE_KEY,Accept:'application/json'},cache:'no-store'});
+      if(!publishedResponse.ok)throw new Error('Não foi possível consultar as giras publicadas');
+      const publishedGiras=await publishedResponse.json();
+      const normalizeGira=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+      for(const dateKey of Object.keys(agendaEvents)){
+        for(const event of agendaEvents[dateKey].filter(item=>item.kind==='gira'&&item.closed!==true)){
+          const match=(Array.isArray(publishedGiras)?publishedGiras:[]).find(gira=>{
+            const publishedDate=String(gira.data_gira||'').slice(0,10);
+            const siteName=normalizeGira(event.name),publishedName=normalizeGira(gira.titulo);
+            return publishedDate===dateKey&&(siteName===publishedName||siteName.includes(publishedName)||publishedName.includes(siteName));
+          });
+          event.reservationsAvailable=Boolean(match);
+          event.openToPublic=Boolean(match);
+          if(match)event.confirmationStatus='confirmed';
+        }
+      }
+    }catch(error){
+      console.warn('Disponibilidade das reservas não atualizada; mantendo agenda em modo seguro.',error);
+    }
     document.querySelector('#flyerCarousel').innerHTML=flyers.map(flyer=>'<article class="slide" data-open="courses"><img src="'+escapeHTML(flyer.image)+'" alt="'+escapeHTML(flyer.alt||flyer.title)+'"><div class="caption">'+escapeHTML(flyer.caption||flyer.title)+'</div></article>').join('')+'<article class="slide agenda-slide" data-open="agenda"><div class="agenda-mini" id="agendaMiniCalendar" aria-label="Prévia do calendário de outubro de 2026"></div><div class="caption">Agenda Mensal</div></article>';
     const recordsCarousel=document.querySelector('#recordsCarousel');
     recordsCarousel.innerHTML=records.map(record=>record.mediaType==='image'?'<article class="media-card"><img src="'+escapeHTML(record.media)+'" alt="'+escapeHTML(record.title)+'"><p>'+escapeHTML(record.title)+'</p></article>':'<article class="media-card"><video controls preload="metadata" playsinline><source src="'+escapeHTML(record.media)+'" type="video/mp4">Seu navegador não reproduz este vídeo.</video><p>'+escapeHTML(record.title)+'</p></article>').join('');
