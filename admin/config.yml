@@ -54,6 +54,17 @@ collections:
                   - { label: Desenvolvimento mediúnico, value: development }
                   - { label: Outro evento, value: event }
               - { label: Gira fechada ao público, name: closed, widget: boolean, default: false, required: false }
+              - label: Situação da confirmação
+                name: confirmationStatus
+                widget: select
+                options:
+                  - { label: Programação futura / aguardando confirmação, value: scheduled }
+                  - { label: Confirmada, value: confirmed }
+                  - { label: Fechada ao público, value: closed }
+                default: scheduled
+                required: false
+              - { label: Aberta ao público, name: openToPublic, widget: boolean, default: false, required: false }
+              - { label: Reservas disponíveis, name: reservationsAvailable, widget: boolean, default: false, required: false }
               - { label: Nome curto na agenda (opcional), name: label, widget: string, required: false }
               - { label: Situação ou observação (opcional), name: status, widget: string, required: false }
           - label: Fotos e vídeos de eventos
