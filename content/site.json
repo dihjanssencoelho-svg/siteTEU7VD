@@ -14,28 +14,180 @@
     }
   ],
   "agenda": [
-    { "date": "2026-10-02", "name": "Gira de Pretos Velhos", "kind": "gira", "closed": false },
-    { "date": "2026-10-03", "name": "Magia Divina - 7 Chamas - 13h-14h30", "kind": "course", "closed": false },
-    { "date": "2026-10-10", "name": "Magia Divina - 7 Chamas - 13h-14h30", "kind": "course", "closed": false },
-    { "date": "2026-10-11", "name": "Festa dos Erês", "kind": "gira", "closed": false },
-    { "date": "2026-10-16", "name": "Baianos - homenagem a Oxum", "kind": "gira", "closed": false },
-    { "date": "2026-10-17", "name": "Hatha Yoga - 15h-17h30", "kind": "class", "closed": false },
-    { "date": "2026-10-17", "name": "Magia Divina - 7 Chamas - 13h-14h30", "kind": "course", "closed": false },
-    { "date": "2026-10-23", "name": "Gira de Boiadeiros", "kind": "gira", "closed": false },
-    { "date": "2026-10-24", "name": "Magia Divina - 7 Chamas - 13h-14h30", "kind": "course", "closed": false },
-    { "date": "2026-10-30", "name": "Gira de Pombagiras", "kind": "gira", "closed": false },
-    { "date": "2026-10-31", "name": "Magia Divina - 7 Chamas - 13h-14h30", "kind": "course", "closed": false },
-    { "date": "2026-11-06", "name": "Gira de Caboclos 🌿", "kind": "gira", "closed": false },
-    { "date": "2026-11-13", "name": "Gira de Pretos Velhos", "kind": "gira", "closed": false },
-    { "date": "2026-11-15", "name": "Gira fechada - Homenagem à Umbanda", "kind": "gira", "closed": true },
-    { "date": "2026-11-20", "name": "Gira de Marinheiros", "kind": "gira", "closed": false },
-    { "date": "2026-11-27", "name": "Gira de Exús e Pombagiras 🎩🌹", "kind": "gira", "closed": false },
-    { "date": "2026-12-05", "name": "Homenagem à Iemanjá - Praia", "kind": "gira", "closed": false },
-    { "date": "2026-12-13", "name": "Confraternização da família TEU7VD / TDMS", "kind": "event", "closed": false }
+    {
+      "date": "2026-10-02",
+      "name": "Gira de Pretos Velhos",
+      "kind": "gira",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-10-03",
+      "name": "Magia Divina - 7 Chamas - 13h-14h30",
+      "kind": "course",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-10-10",
+      "name": "Magia Divina - 7 Chamas - 13h-14h30",
+      "kind": "course",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-10-11",
+      "name": "Festa dos Erês",
+      "kind": "gira",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-10-16",
+      "name": "Baianos - homenagem a Oxum",
+      "kind": "gira",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-10-17",
+      "name": "Hatha Yoga - 15h-17h30",
+      "kind": "class",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-10-17",
+      "name": "Magia Divina - 7 Chamas - 13h-14h30",
+      "kind": "course",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-10-23",
+      "name": "Gira de Boiadeiros",
+      "kind": "gira",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-10-24",
+      "name": "Magia Divina - 7 Chamas - 13h-14h30",
+      "kind": "course",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-10-30",
+      "name": "Gira de Pombagiras",
+      "kind": "gira",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-10-31",
+      "name": "Magia Divina - 7 Chamas - 13h-14h30",
+      "kind": "course",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-11-06",
+      "name": "Gira de Caboclos 🌿",
+      "kind": "gira",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-11-13",
+      "name": "Gira de Pretos Velhos",
+      "kind": "gira",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-11-15",
+      "name": "Gira fechada - Homenagem à Umbanda",
+      "kind": "gira",
+      "closed": true,
+      "confirmationStatus": "closed"
+    },
+    {
+      "date": "2026-11-20",
+      "name": "Gira de Marinheiros",
+      "kind": "gira",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-11-27",
+      "name": "Gira de Exús e Pombagiras 🎩🌹",
+      "kind": "gira",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-12-05",
+      "name": "Homenagem à Iemanjá - Praia",
+      "kind": "gira",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    },
+    {
+      "date": "2026-12-13",
+      "name": "Confraternização da família TEU7VD / TDMS",
+      "kind": "event",
+      "closed": false,
+      "confirmationStatus": "scheduled",
+      "openToPublic": false,
+      "reservationsAvailable": false
+    }
   ],
   "records": [
-    { "date": "", "title": "Curso de Magia Divina", "mediaType": "video", "media": "assets/registro-video-01.mp4" },
-    { "date": "2026-10-11", "title": "Gira de Erês", "mediaType": "video", "media": "assets/registro-video-02.mp4" }
+    {
+      "date": "",
+      "title": "Curso de Magia Divina",
+      "mediaType": "video",
+      "media": "assets/registro-video-01.mp4"
+    },
+    {
+      "date": "2026-10-11",
+      "title": "Gira de Erês",
+      "mediaType": "video",
+      "media": "assets/registro-video-02.mp4"
+    }
   ],
   "developmentClasses": {
     "wednesday": true,
@@ -47,4 +199,3 @@
     "saturdayStatus": "Única turma aguardando início; data a confirmar."
   }
 }
-
