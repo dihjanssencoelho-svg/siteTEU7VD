@@ -26,10 +26,11 @@ A conta administrativa ainda precisa ser criada e autorizada. Depois de receber 
 3. No SQL Editor, execute a instrução abaixo substituindo o e-mail pelo endereço exato do usuário:
 
 ```sql
-insert into private.administradores (user_id)
-select id from auth.users
+insert into private.administradores (user_id, pode_acessar_painel, pode_convidar)
+select id, true, true from auth.users
 where lower(email) = lower('EMAIL_DO_ADMIN')
-on conflict (user_id) do nothing;
+on conflict (user_id) do update
+set pode_acessar_painel = true, pode_convidar = true;
 ```
 
 4. Acesse `https://dihjanssencoelho-svg.github.io/siteTEU7VD/admin/manifestacoes.html` e entre com o e-mail e senha cadastrados.
@@ -49,3 +50,16 @@ Cada registro permite alterar a situação (Recebida, Em análise, Respondida ou
 ## Limites e próximos reforços
 
 A publicação inicial usa o plano Free e uma chave publishable. Antes de divulgar amplamente o formulário, recomenda-se ativar proteção antispam (por exemplo, Cloudflare Turnstile com validação server-side) e definir política de retenção das manifestações. O anonimato no formulário significa que não são solicitados nome/contato e que a tabela não guarda IP; isso não equivale a uma promessa de anonimato absoluto sobre registros técnicos de infraestrutura.
+
+
+## Convites com permissão de acesso
+
+No painel, usuários autorizados a convidar verão a seção **Enviar convite administrativo**. O remetente informa o e-mail e escolhe se concede acesso ao painel.
+
+- Marcado: a conta convidada recebe permissão de leitura e tratamento das manifestações.
+- Desmarcado: a conta é convidada, mas não recebe permissão para consultar ou tratar manifestações.
+- Somente administradores com `pode_convidar = true` conseguem enviar convites.
+- A função Edge `convidar-administrador` valida o JWT e a permissão no banco antes de enviar o convite.
+- Novos convidados com acesso recebem `pode_convidar = false` por padrão. A capacidade de convidar outros administradores permanece restrita ao administrador inicial.
+
+A permissão é aplicada por políticas RLS no banco, portanto não depende apenas da interface.
