@@ -3,6 +3,7 @@ backend:
   repo: dihjanssencoelho-svg/siteTEU7VD
   branch: main
   base_url: https://teu7vd-github-oauth.dih-janssen-coelho.workers.dev
+  auth_endpoint: /auth
 
 publish_mode: editorial_workflow
 site_url: https://dihjanssencoelho-svg.github.io/siteTEU7VD/
