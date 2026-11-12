@@ -22,10 +22,10 @@ const supabase=createClient('https://cuczsrmhvuolqepqsxgn.supabase.co','sb_publi
 const form=document.querySelector('#feedbackForm'),anonymous=document.querySelector('#anonimo'),identity=document.querySelector('#identityFields'),result=document.querySelector('#result'),send=document.querySelector('#send');
 anonymous.addEventListener('change',()=>{identity.hidden=anonymous.checked;});
 form.addEventListener('submit',async e=>{e.preventDefault();result.textContent='';result.className='';if(document.querySelector('#website').value)return;
-const payload={tipo:form.querySelector('input[name="tipo"]:checked')?.value,mensagem:document.querySelector('#mensagem').value.trim(),anonimo:anonymous.checked,nome:anonymous.checked?null:(document.querySelector('#nome').value.trim()||null),contato:anonymous.checked?null:(document.querySelector('#contato').value.trim()||null)};
+const bytes=crypto.getRandomValues(new Uint8Array(4));const protocol=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('').toUpperCase();const payload={protocolo:protocol,tipo:form.querySelector('input[name="tipo"]:checked')?.value,mensagem:document.querySelector('#mensagem').value.trim(),anonimo:anonymous.checked,nome:anonymous.checked?null:(document.querySelector('#nome').value.trim()||null),contato:anonymous.checked?null:(document.querySelector('#contato').value.trim()||null)};
 if(payload.mensagem.length<10){result.className='notice error';result.textContent='Escreva uma mensagem com pelo menos 10 caracteres.';return;}
 send.disabled=true;send.textContent='Enviando...';
-try{const {data,error}=await supabase.from('manifestacoes').insert(payload).select('protocolo').single();if(error)throw error;form.reset();anonymous.checked=true;identity.hidden=true;result.className='notice success';result.textContent='Sua manifestação foi recebida. Protocolo: '+data.protocolo+'. Guarde este código para sua referência.';}
+try{const {error}=await supabase.from('manifestacoes').insert(payload);if(error)throw error;form.reset();anonymous.checked=true;identity.hidden=true;result.className='notice success';result.textContent='Sua manifestação foi recebida. Protocolo: '+protocol+'. Guarde este código para sua referência.';}
 catch(err){console.error(err);result.className='notice error';result.textContent='Não foi possível enviar agora. Tente novamente mais tarde.';}
 finally{send.disabled=false;send.textContent='Enviar manifestação';}
 });
